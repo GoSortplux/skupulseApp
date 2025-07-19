@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+, "src/utils/sms.ts", "src/context/AuthContext.ts"  ]
 }

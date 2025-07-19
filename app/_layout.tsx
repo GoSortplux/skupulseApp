@@ -1,39 +1,42 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
+// app/_layout.tsx
 import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { AuthProvider } from '../src/context/AuthContext';
+import { useEffect, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const [manualClockEnabled, setManualClockEnabled] = useState(true);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    const cleanupOldSettings = async () => {
+      try {
+        await AsyncStorage.removeItem('@SchoolRFIDApp:signInStart');
+        await AsyncStorage.removeItem('@SchoolRFIDApp:signInEnd');
+        await AsyncStorage.removeItem('@SchoolRFIDApp:signOutStart');
+        console.log('Cleaned up old time window settings');
+      } catch (err) {
+        console.error('Error cleaning up old settings:', err);
+      }
+    };
+    cleanupOldSettings();
 
-  if (!loaded) {
-    return null;
-  }
+    AsyncStorage.getItem('@SchoolRFIDApp:manualClockEnabled').then((value) => setManualClockEnabled(value !== 'false'));
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <AuthProvider>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+        <Stack.Screen name="index" options={{ title: 'Home', headerShown: false }} />
+        <Stack.Screen name="scan" options={{ title: 'Scan RFID' }} />
+        <Stack.Screen name="register" options={{ title: 'Register Student' }} />
+        <Stack.Screen name="students" options={{ title: 'View Students' }} />
+        <Stack.Screen name="attendance" options={{ title: 'Attendance Logs' }} />
+        <Stack.Screen name="messages" options={{ title: 'Sent Messages' }} />
+        <Stack.Screen name="settings" options={{ title: 'Settings' }} />
+        {manualClockEnabled && (
+          <Stack.Screen name="manual" options={{ title: 'Manual Clock-In/Out' }} />
+        )}
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    </AuthProvider>
   );
 }
