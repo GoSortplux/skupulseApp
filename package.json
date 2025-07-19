@@ -21,6 +21,7 @@
     "@react-navigation/bottom-tabs": "^7.0.0",
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/stack": "^7.0.0",
+    "@types/lodash": "^4.17.20",
     "@types/react": "~18.3.12",
     "expo": "~52.0.38",
     "expo-blur": "~14.0.3",
@@ -39,6 +40,7 @@
     "expo-symbols": "~0.2.2",
     "expo-system-ui": "~4.0.8",
     "expo-web-browser": "~14.0.2",
+    "lodash": "^4.17.21",
     "metro": "0.81.0",
     "metro-config": "0.81.0",
     "metro-resolver": "0.81.0",
@@ -87,12 +89,18 @@
       "supportsTablet": true,
       "infoPlist": {
         "NFCReaderUsageDescription": "We need NFC to scan RFID cards.",
-        "com.apple.developer.nfc.readersession.iso7816.select-identifiers": ["A000000003000000", "D2760000850101"]
+        "com.apple.developer.nfc.readersession.iso7816.select-identifiers": [
+          "A000000003000000",
+          "D2760000850101"
+        ]
       },
       "buildNumber": "1"
     },
     "entitlements": {
-      "com.apple.developer.nfc.readersession.formats": ["NDEF", "TAG"]
+      "com.apple.developer.nfc.readersession.formats": [
+        "NDEF",
+        "TAG"
+      ]
     },
     "android": {
       "permissions": [
@@ -141,8 +149,12 @@
       "typedRoutes": true
     },
     "extra": {
-      "router": { "origin": false },
-      "eas": { "projectId": "8b04df91-96fd-4d42-aeba-974b8ed51211" },
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "8b04df91-96fd-4d42-aeba-974b8ed51211"
+      },
       "EBULKSMS_API_KEY": "9e934506c9a378dc425c37c90a9faeddef53a4b2",
       "EBULKSMS_USERNAME": "olabsquaredydx@gmail.com",
       "EBULKSMS_SENDER": "Glisten"
