@@ -34,7 +34,12 @@ export const sendSMS = async (rfid: string, phoneNumber: string, message: string
   }
 
   // Format phone number for Termii (e.g., '2348012345678', no '+')
-  const formattedPhoneNumber = phoneNumber.startsWith('234') ? phoneNumber : `234${phoneNumber.substring(1)}`;
+  let formattedPhoneNumber = phoneNumber;
+  if (phoneNumber.startsWith('0')) {
+    formattedPhoneNumber = `234${phoneNumber.substring(1)}`;
+  } else if (!phoneNumber.startsWith('234')) {
+    formattedPhoneNumber = `234${phoneNumber}`;
+  }
 
   // Construct the full endpoint URL from the base URL
   const url = `${TERMII_API_URL}/api/sms/send`;
