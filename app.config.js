@@ -65,7 +65,7 @@ export default {
        // +++ ADDED NEW TERMII KEYS +++
       TERMII_API_KEY: 'TLMyDDUWQezlWXunIZupqEoaNQXKhvWBvqUEPMxoIandWuMTsArGNGpEqLGimm',      
       TERMII_SENDER_ID: 'N-Alert',        
-      TERMII_API_URL: 'https://v3.api.termii.com/api/sms/send', 
+      TERMII_API_URL: 'https://api.termii.com',
     },
   },
 };
