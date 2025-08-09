@@ -72,7 +72,8 @@ export const startNfc = async (
       const isAM = now.getHours() < 12;
       const event: 'in' | 'out' = isAM ? 'in' : 'out';
 
-      const message = `Dear Parent, ${student.name} has ${
+      // 👇 CHANGED: Added "From GoSortplux: " to the beginning of the message
+      const message = `From GoSortplux: Dear Parent, ${student.name} has ${
         event === 'in' ? 'entered' : 'exited'
       } the school on ${now.toLocaleDateString('en-US', {
         weekday: 'short',

@@ -155,9 +155,9 @@
       "eas": {
         "projectId": "8b04df91-96fd-4d42-aeba-974b8ed51211"
       },
-      "EBULKSMS_API_KEY": "9e934506c9a378dc425c37c90a9faeddef53a4b2",
-      "EBULKSMS_USERNAME": "olabsquaredydx@gmail.com",
-      "EBULKSMS_SENDER": "Glisten"
+      "TERMII_API_KEY": "TLMyDDUWQezlWXunIZupqEoaNQXKhvWBvqUEPMxoIandWuMTsArGNGpEqLGimm",      
+      "TERMII_SENDER_ID": "N-Alert",        
+      "TERMII_API_URL": "https://v3.api.termii.com/api/sms/send" 
     },
     "doctor": {
       "reactNativeDirectoryCheck": {

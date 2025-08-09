@@ -2,17 +2,21 @@ import Constants from 'expo-constants';
 import { logMessage } from './storage';
 import * as FileSystem from 'expo-file-system';
 
-const SMSLIVE247_API_KEY = Constants.expoConfig?.extra?.SMSLIVE247_API_KEY;
-const SMSLIVE247_SENDER = Constants.expoConfig?.extra?.SMSLIVE247_SENDER || 'Glisten';
+// Retrieve Termii credentials from app config
+const TERMII_API_KEY = Constants.expoConfig?.extra?.TERMII_API_KEY;
+const TERMII_SENDER_ID = Constants.expoConfig?.extra?.TERMII_SENDER_ID;
+const TERMII_API_URL = Constants.expoConfig?.extra?.TERMII_API_URL;
+
 const LOG_FILE = `${FileSystem.documentDirectory}sms_logs.txt`;
 
+// The logging function remains the same
 const appendLog = async (message: string) => {
   try {
     let existing = '';
     try {
       existing = await FileSystem.readAsStringAsync(LOG_FILE, { encoding: FileSystem.EncodingType.UTF8 });
     } catch (readError) {
-      // File may not exist yet; ignore
+      // File may not exist yet, which is fine.
     }
     const newLog = `${new Date().toISOString()} - ${message}\n`;
     await FileSystem.writeAsStringAsync(LOG_FILE, existing + newLog, { encoding: FileSystem.EncodingType.UTF8 });
@@ -22,71 +26,60 @@ const appendLog = async (message: string) => {
 };
 
 export const sendSMS = async (rfid: string, phoneNumber: string, message: string): Promise<void> => {
-  if (!SMSLIVE247_API_KEY) {
-    const errorMsg = 'SMSLive247 API key not configured.';
+  // Check for Termii API key, Sender ID, and Base URL
+  if (!TERMII_API_KEY || !TERMII_SENDER_ID || !TERMII_API_URL) {
+    const errorMsg = 'Termii API key, Sender ID, or URL not configured.';
     await appendLog(errorMsg);
     throw new Error(errorMsg);
   }
 
-  const formattedPhoneNumber = `+${phoneNumber.replace(/^0/, '234')}`; // Ensure +234 prefix
-  const payloadLog = JSON.stringify({
-    SenderID: SMSLIVE247_SENDER,
-    messageText: message,
-    mobileNumber: formattedPhoneNumber,
-    messageId: `${rfid}_${Date.now()}`,
-  }, null, 2);
-  await appendLog(`Sending SMS with payload:\n${payloadLog}`);
+  // Format phone number for Termii (e.g., '2348012345678', no '+')
+  const formattedPhoneNumber = phoneNumber.startsWith('234') ? phoneNumber : `234${phoneNumber.substring(1)}`;
 
-  const url = 'https://api.smslive247.com/api/v4/sms';
+  // Construct the full endpoint URL from the base URL
+  const url = `${TERMII_API_URL}/api/sms/send`;
+
+  // Construct the payload for the Termii API
   const payload = {
-    SenderID: SMSLIVE247_SENDER,
-    messageText: message,
-    mobileNumber: formattedPhoneNumber,
-    deliveryTime: null,
-    route: 'default',
+    to: formattedPhoneNumber,
+    from: TERMII_SENDER_ID,
+    sms: message,
+    type: 'plain',
+    channel: 'dnd', // 👈 CHANGED: Set channel to 'dnd' as requested
+    api_key: TERMII_API_KEY,
   };
+
+  // Log the request payload for debugging (hiding the API key)
+  await appendLog(`Sending SMS with Termii payload:\n${JSON.stringify(payload, (key, value) => key === 'api_key' ? '***' : value, 2)}`);
 
   try {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'accept': 'application/json',
-        'content-type': 'application/*+json',
-        'Authorization': `Bearer ${SMSLIVE247_API_KEY}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
     });
 
     const result = await response.json();
-    await appendLog(`SMSLive247 Raw Response:\n${JSON.stringify(result, null, 2)}`);
+    await appendLog(`Termii Raw Response:\n${JSON.stringify(result, null, 2)}`);
 
-    if (!result || typeof result !== 'object') {
-      throw new Error('Invalid API response format');
-    }
-
-    // Flexible success check: Assume success unless a clear error is present
-    if (response.status >= 200 && response.status < 300 && (!result.error && !result.message?.toLowerCase().includes('fail'))) {
-      console.log('SMS Successfully Sent:', result);
+    // Check for a successful response
+    if (response.ok && (result?.code === 'ok' || result?.message === 'Message sent successfully.')) {
+      console.log('SMS Successfully Sent via Termii:', result);
       await logMessage(rfid, formattedPhoneNumber, message, 'sent');
       return;
     }
 
-    const errorMessage = result.message || result.error || 'Failed to send SMS';
-    switch (response.status) {
-      case 401:
-        throw new Error('Authentication failed: Invalid API key');
-      case 400:
-        throw new Error(`Validation failed: ${errorMessage}`);
-      case 403:
-        throw new Error('Insufficient credit or account issue');
-      default:
-        throw new Error(`Unexpected response: ${errorMessage} (Status: ${response.status})`);
-    }
+    // If not successful, throw an error
+    const errorMessage = result?.message || 'Failed to send SMS via Termii';
+    throw new Error(`${errorMessage} (Status: ${response.status})`);
+
   } catch (error) {
     await logMessage(rfid, formattedPhoneNumber, message, 'failed');
     const errorMessage = error instanceof Error ? error.message : 'Unknown SMS error';
-    await appendLog(`SMS Error Details: ${errorMessage}`);
-    console.error('SMS Error Details:', errorMessage, error);
+    await appendLog(`Termii SMS Error Details: ${errorMessage}`);
+    console.error('Termii SMS Error Details:', errorMessage, error);
     throw new Error(errorMessage);
   }
 };
