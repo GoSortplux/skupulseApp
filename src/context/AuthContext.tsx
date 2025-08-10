@@ -23,8 +23,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   // Default admin creds (can be updated later)
-  const ADMIN_STORAGE_KEY = '@SchoolRFIDApp:adminCreds';
-  const ADMIN_STATE_KEY = '@SchoolRFIDApp:adminState';
+  const ADMIN_STORAGE_KEY = '@skupulseApp:adminCreds';
+  const ADMIN_STATE_KEY = '@skupulseApp:adminState';
 
   useEffect(() => {
     // Check if admin is already logged in on app start

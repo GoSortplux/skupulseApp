@@ -10,9 +10,9 @@ export default function RootLayout() {
   useEffect(() => {
     const cleanupOldSettings = async () => {
       try {
-        await AsyncStorage.removeItem('@SchoolRFIDApp:signInStart');
-        await AsyncStorage.removeItem('@SchoolRFIDApp:signInEnd');
-        await AsyncStorage.removeItem('@SchoolRFIDApp:signOutStart');
+        await AsyncStorage.removeItem('@skupulseApp:signInStart');
+        await AsyncStorage.removeItem('@skupulseApp:signInEnd');
+        await AsyncStorage.removeItem('@skupulseApp:signOutStart');
         console.log('Cleaned up old time window settings');
       } catch (err) {
         console.error('Error cleaning up old settings:', err);
@@ -20,7 +20,7 @@ export default function RootLayout() {
     };
     cleanupOldSettings();
 
-    AsyncStorage.getItem('@SchoolRFIDApp:manualClockEnabled').then((value) => setManualClockEnabled(value !== 'false'));
+    AsyncStorage.getItem('@skupulseApp:manualClockEnabled').then((value) => setManualClockEnabled(value !== 'false'));
   }, []);
 
   return (

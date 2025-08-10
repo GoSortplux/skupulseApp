@@ -49,7 +49,7 @@ export default function ScanScreen() {
       return;
     }
 
-    const continuousScan = (await AsyncStorage.getItem('@SchoolRFIDApp:continuousScanEnabled')) !== 'false';
+    const continuousScan = (await AsyncStorage.getItem('@skupulseApp:continuousScanEnabled')) !== 'false';
 
     await startNfc(
       (data: NfcSuccessData) => {

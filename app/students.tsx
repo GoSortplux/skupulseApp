@@ -126,7 +126,7 @@ export default function StudentsScreen() {
         style: 'destructive',
         onPress: async () => {
           try {
-            await AsyncStorage.setItem('@SchoolRFIDApp:students', JSON.stringify([]));
+            await AsyncStorage.setItem('@skupulseApp:students', JSON.stringify([]));
             setStudents([]);
             setFilteredStudents([]);
             Alert.alert('Success', 'All students deleted successfully!');
@@ -163,7 +163,7 @@ export default function StudentsScreen() {
   const handleResetStatuses = async () => {
     try {
       await resetStudentStatuses();
-      await AsyncStorage.removeItem('@SchoolRFIDApp:lastResetTimestamp');
+      await AsyncStorage.removeItem('@skupulseApp:lastResetTimestamp');
       fetchStudents();
       Alert.alert('Success', 'Student statuses reset successfully!');
     } catch (err) {

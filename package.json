@@ -1,5 +1,5 @@
 {
-  "name": "schoolrfidapp",
+  "name": "skupulseapp",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -73,8 +73,8 @@
   },
   "private": true,
   "expo": {
-    "name": "Glisten SAS",
-    "slug": "school-rfid-app",
+    "name": "GoCard App",
+    "slug": "skuPulse",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -113,7 +113,7 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.SchoolRFIDApp",
+      "package": "com.anonymous.skupulseApp",
       "versionCode": 1,
       "targetSdkVersion": 34
     },
