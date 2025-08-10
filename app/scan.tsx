@@ -98,7 +98,7 @@ export default function ScanScreen() {
       marginTop: 20,
       padding: 15,
       borderRadius: 10,
-      backgroundColor: Colors[colorScheme ?? 'light'].card,
+      backgroundColor: Colors[colorScheme ?? 'light'].background,
       elevation: 3,
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 1 },
