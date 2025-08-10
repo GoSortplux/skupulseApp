@@ -11,7 +11,7 @@ export default {
     userInterfaceStyle: 'automatic',
     newArchEnabled: false,
     splash: {
-      // image: './assets/images/splash-icon.png',
+      image: './assets/images/splash-icon.png',
       resizeMode: 'contain',
       backgroundColor: '#ffffff',
     },
@@ -59,10 +59,7 @@ export default {
     extra: {
       router: { origin: false },
       eas: { projectId: '8b04df91-96fd-4d42-aeba-974b8ed51211' },
-      // SMSLIVE247_API_KEY: 'MA-0c9113bb-fdf0-4bc1-a2c2-b4db3f5de5b2',
-      // SMSLIVE247_SENDER: 'Glisten',
-
-       // +++ ADDED NEW TERMII KEYS +++
+    
       TERMII_API_KEY: 'TLMyDDUWQezlWXunIZupqEoaNQXKhvWBvqUEPMxoIandWuMTsArGNGpEqLGimm',      
       TERMII_SENDER_ID: 'N-Alert',        
       TERMII_API_URL: 'https://api.termii.com',
