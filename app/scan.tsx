@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
-import { startNfc, stopNfc, NfcSuccessData } from '../../src/nfc/nfcManager';
-import { resetStudentStatuses } from '../../src/utils/storage';
+import { startNfc, stopNfc, NfcSuccessData } from '../src/nfc/nfcManager';
+import { resetStudentStatuses } from '../src/utils/storage';
 import Tts from 'react-native-tts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ThemedView } from '@/components/ThemedView';
