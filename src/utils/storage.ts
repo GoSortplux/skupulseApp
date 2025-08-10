@@ -31,10 +31,10 @@ export interface MessageLog {
   studentName?: string;
 }
 
-const STUDENTS_KEY = '@SchoolRFIDApp:students';
-const ATTENDANCE_KEY = '@SchoolRFIDApp:attendance';
-const MESSAGE_KEY = '@SchoolRFIDApp:messages';
-const LAST_RESET_KEY = '@SchoolRFIDApp:lastResetTimestamp';
+const STUDENTS_KEY = '@skupulseApp:students';
+const ATTENDANCE_KEY = '@skupulseApp:attendance';
+const MESSAGE_KEY = '@skupulseApp:messages';
+const LAST_RESET_KEY = '@skupulseApp:lastResetTimestamp';
 
 export const registerStudent = async (student: Student): Promise<void> => {
   const students = await getAllStudents();

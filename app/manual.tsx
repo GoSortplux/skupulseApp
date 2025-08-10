@@ -41,7 +41,7 @@ export default function ManualScreen() {
             await logMessage(data.rfid, student.parentPhone2, message, 'sent');
           }
 
-          const ttsEnabled = (await AsyncStorage.getItem('@SchoolRFIDApp:ttsEnabled')) !== 'false';
+          const ttsEnabled = (await AsyncStorage.getItem('@skupulseApp:ttsEnabled')) !== 'false';
           if (ttsEnabled) {
             Tts.speak(event === 'in' ? `Hello ${student.name}, welcome to school` : `Bye bye ${student.name}`);
           }

@@ -15,9 +15,9 @@ export default function SettingsScreen() {
   const [manualClockEnabled, setManualClockEnabled] = useState(true);
 
   useEffect(() => {
-    AsyncStorage.getItem('@SchoolRFIDApp:ttsEnabled').then((value) => setTtsEnabled(value !== 'false'));
-    AsyncStorage.getItem('@SchoolRFIDApp:continuousScanEnabled').then((value) => setContinuousScanEnabled(value !== 'false'));
-    AsyncStorage.getItem('@SchoolRFIDApp:manualClockEnabled').then((value) => setManualClockEnabled(value !== 'false'));
+    AsyncStorage.getItem('@skupulseApp:ttsEnabled').then((value) => setTtsEnabled(value !== 'false'));
+    AsyncStorage.getItem('@skupulseApp:continuousScanEnabled').then((value) => setContinuousScanEnabled(value !== 'false'));
+    AsyncStorage.getItem('@skupulseApp:manualClockEnabled').then((value) => setManualClockEnabled(value !== 'false'));
   }, []);
 
   if (!isAdmin) {
@@ -52,17 +52,17 @@ export default function SettingsScreen() {
 
   const handleTtsToggle = async (value: boolean) => {
     setTtsEnabled(value);
-    await AsyncStorage.setItem('@SchoolRFIDApp:ttsEnabled', value.toString());
+    await AsyncStorage.setItem('@skupulseApp:ttsEnabled', value.toString());
   };
 
   const handleContinuousScanToggle = async (value: boolean) => {
     setContinuousScanEnabled(value);
-    await AsyncStorage.setItem('@SchoolRFIDApp:continuousScanEnabled', value.toString());
+    await AsyncStorage.setItem('@skupulseApp:continuousScanEnabled', value.toString());
   };
 
   const handleManualClockToggle = async (value: boolean) => {
     setManualClockEnabled(value);
-    await AsyncStorage.setItem('@SchoolRFIDApp:manualClockEnabled', value.toString());
+    await AsyncStorage.setItem('@skupulseApp:manualClockEnabled', value.toString());
   };
 
   return (

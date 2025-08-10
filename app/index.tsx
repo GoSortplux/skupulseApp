@@ -18,7 +18,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     resetStudentStatuses().catch((error) => console.error('Error resetting student statuses:', error));
-    AsyncStorage.getItem('@SchoolRFIDApp:manualClockEnabled').then((value) => setManualClockEnabled(value !== 'false'));
+    AsyncStorage.getItem('@skupulseApp:manualClockEnabled').then((value) => setManualClockEnabled(value !== 'false'));
   }, []);
 
   const fetchRecentStudents = async () => {

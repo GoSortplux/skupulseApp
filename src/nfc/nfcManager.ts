@@ -88,7 +88,7 @@ export const startNfc = async (
       await logAttendance(rfid, event);
       await updateStudent(rfid, { ...student, lastEvent: { event, timestamp: scanTime } });
 
-      const ttsEnabled = (await AsyncStorage.getItem('@SchoolRFIDApp:ttsEnabled')) !== 'false';
+      const ttsEnabled = (await AsyncStorage.getItem('@skupulseApp:ttsEnabled')) !== 'false';
       let smsError: string | undefined;
       try {
         await sendSMS(rfid, student.parentPhone, message);

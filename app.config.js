@@ -2,8 +2,8 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: 'Glisten SAS',
-    slug: 'school-rfid-app',
+    name: 'GoCard App',
+    slug: 'skuPulse',
     version: '1.0.0',
     orientation: 'portrait',
     icon: './assets/images/icon.png',
@@ -32,7 +32,7 @@ export default {
         foregroundImage: './assets/images/icon.png',
         backgroundColor: '#ffffff',
       },
-      package: 'com.anonymous.SchoolRFIDApp',
+      package: 'com.anonymous.skupulseApp',
       versionCode: 1,
     },
     web: {
