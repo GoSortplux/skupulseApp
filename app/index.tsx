@@ -94,25 +94,33 @@ export default function HomeScreen() {
         </Pressable>
       </View>
       <Text style={styles.title}>GoCard</Text>
+      <View style={styles.mainAction}>
+        <TouchableOpacity style={styles.goScanButton} onPress={() => handleNavigate('/scan')}>
+          <Ionicons name="scan" size={50} color="#FFF" />
+          <Text style={styles.goScanButtonText}>Go Scan</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.buttonGrid}>
-        <TouchableOpacity style={styles.button} onPress={() => handleNavigate('/scan')}>
-          <Text style={styles.buttonText}>Scan RFID</Text>
+        <TouchableOpacity style={styles.iconButton} onPress={() => handleNavigate('/register')}>
+          <Ionicons name="person-add" size={30} color="#4A90E2" />
+          <Text style={styles.iconButtonText}>Register</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleNavigate('/register')}>
-          <Text style={styles.buttonText}>Register Student</Text>
+        <TouchableOpacity style={styles.iconButton} onPress={() => handleNavigate('/students')}>
+          <Ionicons name="people" size={30} color="#4A90E2" />
+          <Text style={styles.iconButtonText}>Students</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleNavigate('/students')}>
-          <Text style={styles.buttonText}>View Students</Text>
+        <TouchableOpacity style={styles.iconButton} onPress={() => handleNavigate('/attendance')}>
+          <Ionicons name="list" size={30} color="#4A90E2" />
+          <Text style={styles.iconButtonText}>Attendance</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleNavigate('/attendance')}>
-          <Text style={styles.buttonText}>Attendance Logs</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => handleNavigate('/messages')}>
-          <Text style={styles.buttonText}>Sent Messages</Text>
+        <TouchableOpacity style={styles.iconButton} onPress={() => handleNavigate('/messages')}>
+          <Ionicons name="chatbox" size={30} color="#4A90E2" />
+          <Text style={styles.iconButtonText}>Messages</Text>
         </TouchableOpacity>
         {manualClockEnabled && (
-          <TouchableOpacity style={styles.button} onPress={() => handleNavigate('/manual')}>
-            <Text style={styles.buttonText}>Manual Clock-In/Out</Text>
+          <TouchableOpacity style={styles.iconButton} onPress={() => handleNavigate('/manual')}>
+            <Ionicons name="time" size={30} color="#4A90E2" />
+            <Text style={styles.iconButtonText}>Manual Clock</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -171,26 +179,47 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     fontFamily: 'Poppins-Bold',
   },
-  buttonGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: 20 },
-  button: {
+  mainAction: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  goScanButton: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
     backgroundColor: '#4A90E2',
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    width: '48%',
-    marginBottom: 15,
+    justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    elevation: 10,
   },
-  buttonText: {
+  goScanButtonText: {
     color: '#FFF',
-    fontSize: 16,
-    fontWeight: '600',
-    fontFamily: 'Poppins-SemiBold',
+    fontSize: 20,
+    fontWeight: '700',
+    marginTop: 10,
+    fontFamily: 'Poppins-Bold',
+  },
+  buttonGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+  },
+  iconButton: {
+    alignItems: 'center',
+    width: '30%',
+    marginBottom: 20,
+  },
+  iconButtonText: {
+    color: '#34495E',
+    fontSize: 14,
+    fontWeight: '500',
+    marginTop: 5,
+    fontFamily: 'Poppins-Medium',
   },
   subtitle: {
     fontSize: 20,
