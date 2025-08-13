@@ -93,7 +93,7 @@ export default function HomeScreen() {
           <Ionicons name="settings-sharp" size={30} color="#4A90E2" />
         </Pressable>
       </View>
-      <Text style={styles.title}>G Smart Attendance System</Text>
+      <Text style={styles.title}>GoCard</Text>
       <View style={styles.buttonGrid}>
         <TouchableOpacity style={styles.button} onPress={() => handleNavigate('/scan')}>
           <Text style={styles.buttonText}>Scan RFID</Text>
