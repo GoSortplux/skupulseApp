@@ -72,6 +72,16 @@ export const startNfc = async (
       const isAM = now.getHours() < 12;
       const event: 'in' | 'out' = isAM ? 'in' : 'out';
 
+      const formatTime = (date: Date) => {
+        let hours = date.getHours();
+        const minutes = date.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours %= 12;
+        hours = hours || 12; // the hour '0' should be '12'
+        const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
+        return `${hours}:${minutesStr} ${ampm}`;
+      };
+
       const message = `GoSortplux: Dear Parent, ${student.name} has ${
         event === 'in' ? 'entered' : 'exited'
       } the school on ${now.toLocaleDateString('en-US', {
@@ -79,11 +89,7 @@ export const startNfc = async (
         year: 'numeric',
         month: 'short',
         day: 'numeric',
-      })} at ${now.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-      })}`;
+      })} at ${formatTime(now)}`;
 
       await logAttendance(rfid, event);
       await updateStudent(rfid, { ...student, lastEvent: { event, timestamp: scanTime } });
