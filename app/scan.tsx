@@ -76,7 +76,7 @@ export default function ScanScreen() {
 
   const styles = StyleSheet.create({
     container: { flex: 1, padding: 20, backgroundColor: Colors[colorScheme ?? 'light'].background },
-    title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 20, color: Colors[colorScheme ?? 'light'].text },
+    title: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 20, color: Colors[colorScheme ?? 'light'].text },
     scanButton: {
       backgroundColor: Colors[colorScheme ?? 'light'].tint,
       paddingVertical: 15,

@@ -92,17 +92,11 @@ export const startNfc = async (
       let smsError: string | undefined;
       try {
         await sendSMS(rfid, student.parentPhone, message);
-        await logMessage(rfid, student.parentPhone, message, 'sent');
         if (student.parentPhone2) {
           await sendSMS(rfid, student.parentPhone2, message);
-          await logMessage(rfid, student.parentPhone2, message, 'sent');
         }
       } catch (err) {
         smsError = err instanceof Error ? err.message : 'SMS failed';
-        await logMessage(rfid, student.parentPhone, message, 'failed');
-        if (student.parentPhone2) {
-          await logMessage(rfid, student.parentPhone2, message, 'failed');
-        }
       }
 
       if (ttsEnabled) {
