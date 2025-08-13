@@ -2,6 +2,7 @@ import 'dotenv/config';
 
 export default {
   expo: {
+    owner: 'doncodeo1', // 👈 Add this line
     name: 'GoCard App',
     slug: 'skuPulse',
     version: '1.0.0',
@@ -19,7 +20,10 @@ export default {
       supportsTablet: true,
       infoPlist: {
         NFCReaderUsageDescription: 'We need NFC to scan RFID cards.',
-        'com.apple.developer.nfc.readersession.iso7816.select-identifiers': ['A000000003000000', 'D2760000850101'],
+        'com.apple.developer.nfc.readersession.iso7816.select-identifiers': [
+          'A000000003000000',
+          'D2760000850101',
+        ],
       },
       buildNumber: '1',
     },
@@ -27,7 +31,12 @@ export default {
       'com.apple.developer.nfc.readersession.formats': ['NDEF', 'TAG'],
     },
     android: {
-      permissions: ['NFC', 'android.permission.NFC', 'WRITE_EXTERNAL_STORAGE', 'READ_EXTERNAL_STORAGE'],
+      permissions: [
+        'NFC',
+        'android.permission.NFC',
+        'WRITE_EXTERNAL_STORAGE',
+        'READ_EXTERNAL_STORAGE',
+      ],
       adaptiveIcon: {
         foregroundImage: './assets/images/icon.png',
         backgroundColor: '#ffffff',
@@ -58,12 +67,11 @@ export default {
     },
     extra: {
       router: { origin: false },
-      eas: { projectId: '8b04df91-96fd-4d42-aeba-974b8ed51211' },
-    
-      TERMII_API_KEY: 'TLMyDDUWQezlWXunIZupqEoaNQXKhvWBvqUEPMxoIandWuMTsArGNGpEqLGimm',      
-      TERMII_SENDER_ID: 'N-Alert',        
+      eas: { projectId: '216084fa-c98c-4684-95d2-5d78a97f6133' },
+
+      TERMII_API_KEY:'TLMyDDUWQezlWXunIZupqEoaNQXKhvWBvqUEPMxoIandWuMTsArGNGpEqLGimm',
+      TERMII_SENDER_ID: 'N-Alert',
       TERMII_API_URL: 'https://api.termii.com',
     },
   },
 };
-
