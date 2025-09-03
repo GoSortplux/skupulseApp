@@ -1,4 +1,5 @@
 // src/utils/storage.ts
+import { getStudents as apiGetStudents, addStudent as apiAddStudent } from './api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import * as XLSX from 'xlsx';
@@ -37,16 +38,39 @@ const MESSAGE_KEY = '@skupulseApp:messages';
 const LAST_RESET_KEY = '@skupulseApp:lastResetTimestamp';
 
 export const registerStudent = async (student: Student): Promise<void> => {
+  const { schoolId } = await getSession();
+  if (!schoolId) {
+    throw new Error('Cannot register student. Not logged in.');
+  }
+
+  // First, check for local duplicates to provide immediate feedback
   const students = await getAllStudents();
   if (students.find((s) => s.rfid === student.rfid)) {
     throw new Error('Student with this RFID already exists');
   }
-  await AsyncStorage.setItem(STUDENTS_KEY, JSON.stringify([...students, student]));
+
+  await apiAddStudent(schoolId, student);
+
+  // After successful API call, update local storage.
+  const updatedStudents = [...students, student];
+  await AsyncStorage.setItem(STUDENTS_KEY, JSON.stringify(updatedStudents));
 };
 
 export const getAllStudents = async (): Promise<Student[]> => {
-  const jsonValue = await AsyncStorage.getItem(STUDENTS_KEY);
-  return jsonValue ? JSON.parse(jsonValue) : [];
+  try {
+    const { schoolId } = await getSession();
+    if (!schoolId) {
+      const jsonValue = await AsyncStorage.getItem(STUDENTS_KEY);
+      return jsonValue ? JSON.parse(jsonValue) : [];
+    }
+    const students = await apiGetStudents(schoolId);
+    await AsyncStorage.setItem(STUDENTS_KEY, JSON.stringify(students));
+    return students;
+  } catch (error) {
+    console.error('Failed to fetch students from API, loading from local storage', error);
+    const jsonValue = await AsyncStorage.getItem(STUDENTS_KEY);
+    return jsonValue ? JSON.parse(jsonValue) : [];
+  }
 };
 
 export const getStudent = async (rfid: string): Promise<Student | null> => {
@@ -253,3 +277,22 @@ export const deleteAllMessageLogs = async (): Promise<void> => {
 };
 
 export const getStudents = getAllStudents;
+
+const AUTH_TOKEN_KEY = '@skupulseApp:authToken';
+const SCHOOL_ID_KEY = '@skupulseApp:schoolId';
+
+export const saveSession = async (token: string, schoolId: string) => {
+  await AsyncStorage.setItem(AUTH_TOKEN_KEY, token);
+  await AsyncStorage.setItem(SCHOOL_ID_KEY, schoolId);
+};
+
+export const getSession = async () => {
+  const token = await AsyncStorage.getItem(AUTH_TOKEN_KEY);
+  const schoolId = await AsyncStorage.getItem(SCHOOL_ID_KEY);
+  return { token, schoolId };
+};
+
+export const clearSession = async () => {
+  await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
+  await AsyncStorage.removeItem(SCHOOL_ID_KEY);
+};
