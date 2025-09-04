@@ -2,6 +2,28 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from './storage';
 
+const handleApiResponse = async (response: Response) => {
+    const responseText = await response.text();
+
+    if (!response.ok) {
+        let errorMessage = `Request failed with status: ${response.status}`;
+        try {
+            const errorData = JSON.parse(responseText);
+            errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+            // Not a JSON response, use the text
+            errorMessage = `${errorMessage}. Server response: ${responseText.substring(0, 200)}...`;
+        }
+        throw new Error(errorMessage);
+    }
+
+    try {
+        return JSON.parse(responseText);
+    } catch (e) {
+        throw new Error(`Failed to parse successful response from server. Response: ${responseText.substring(0, 200)}...`);
+    }
+};
+
 const API_URL = 'https://skupulse-8k3l.onrender.com';
 
 const getAuthToken = async () => {
@@ -17,14 +39,7 @@ export const loginUser = async (email: string, password: string) => {
       },
       body: JSON.stringify({ email, password }),
     });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Login failed');
-    }
-
-    const data = await response.json();
-    return data;
+    return handleApiResponse(response);
   } catch (error) {
     console.error('Login API error:', error);
     throw error;
@@ -45,14 +60,7 @@ export const getStudents = async (schoolId: string) => {
         'Authorization': `Bearer ${token}`,
       },
     });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to fetch students');
-    }
-
-    const data = await response.json();
-    return data;
+    return handleApiResponse(response);
   } catch (error) {
     console.error('Get students API error:', error);
     throw error;
@@ -74,14 +82,7 @@ export const addStudent = async (schoolId: string, studentData: Student) => {
       },
       body: JSON.stringify(studentData),
     });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || 'Failed to add student');
-    }
-
-    const data = await response.json();
-    return data;
+    return handleApiResponse(response);
   } catch (error) {
     console.error('Add student API error:', error);
     throw error;
