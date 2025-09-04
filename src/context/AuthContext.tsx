@@ -38,7 +38,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
-      // The username from the form is the email
       const data = await loginUser(username, password);
 
       if (data.token && data.school.id) {
