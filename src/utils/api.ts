@@ -24,7 +24,7 @@ const handleApiResponse = async (response: Response) => {
     }
 };
 
-const API_URL = 'https://skupulse-8k3l.onrender.com';
+const API_URL = 'https://skupulse-8k3l.onrender.com/api';
 
 const getAuthToken = async () => {
   return await AsyncStorage.getItem('@skupulseApp:authToken');
