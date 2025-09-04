@@ -40,8 +40,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const data = await loginUser(username, password);
 
-      if (data.token && data.school.id) {
-        await saveSession(data.token, data.school.id);
+      if (data.token && data.user && data.user.userId) {
+        await saveSession(data.token, data.user.userId);
         setIsAdmin(true);
         return true;
       }
