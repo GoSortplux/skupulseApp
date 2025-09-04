@@ -2,7 +2,29 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from './storage';
 
-const API_URL = 'https://skupulse-8k3l.onrender.com';
+const handleApiResponse = async (response: Response) => {
+    const responseText = await response.text();
+
+    if (!response.ok) {
+        let errorMessage = `Request failed with status: ${response.status}`;
+        try {
+            const errorData = JSON.parse(responseText);
+            errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+            // Not a JSON response, use the text
+            errorMessage = `${errorMessage}. Server response: ${responseText.substring(0, 200)}...`;
+        }
+        throw new Error(errorMessage);
+    }
+
+    try {
+        return JSON.parse(responseText);
+    } catch (e) {
+        throw new Error(`Failed to parse successful response from server. Response: ${responseText.substring(0, 200)}...`);
+    }
+};
+
+const API_URL = 'https://skupulse-8k3l.onrender.com/api';
 
 const getAuthToken = async () => {
   return await AsyncStorage.getItem('@skupulseApp:authToken');
