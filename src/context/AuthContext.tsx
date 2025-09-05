@@ -38,8 +38,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
       const data = await loginUser(username, password);
-      if (data.token && data.user && data.user.schoolId) {
-        await saveSession(data.token, data.user.schoolId);
+      if (data.token && data.user && data.user.school && data.user.school.id) {
+        await saveSession(data.token, data.user.school.id);
         setIsAdmin(true);
         return true;
       }
