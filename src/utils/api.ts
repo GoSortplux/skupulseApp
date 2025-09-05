@@ -53,6 +53,28 @@ export const loginUser = async (username: string, password: string) => {
   }
 };
 
+export const updateAdminCredentials = async (userId: string, credentials: { username?: string; password?: string }) => {
+  try {
+    const token = await getAuthToken();
+    if (!token) {
+      throw new Error('Authentication token not found');
+    }
+
+    const response = await fetch(`${API_URL}/auth/update-credentials`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ userId, ...credentials }),
+    });
+    return handleApiResponse(response);
+  } catch (error) {
+    console.error('Update credentials API error:', error);
+    throw error;
+  }
+};
+
 export const getStudents = async (schoolId: string) => {
   try {
     const token = await getAuthToken();
