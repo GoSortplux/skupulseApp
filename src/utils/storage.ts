@@ -63,9 +63,11 @@ export const getAllStudents = async (): Promise<Student[]> => {
       const jsonValue = await AsyncStorage.getItem(STUDENTS_KEY);
       return jsonValue ? JSON.parse(jsonValue) : [];
     }
-    const students = await apiGetStudents(schoolId);
-    await AsyncStorage.setItem(STUDENTS_KEY, JSON.stringify(students));
-    return students;
+    const apiResponse = await apiGetStudents(schoolId);
+    // The API returns an object { total, students }, so we extract the array
+    const studentList = apiResponse.students || [];
+    await AsyncStorage.setItem(STUDENTS_KEY, JSON.stringify(studentList));
+    return studentList;
   } catch (error) {
     console.error('Failed to fetch students from API, loading from local storage', error);
     const jsonValue = await AsyncStorage.getItem(STUDENTS_KEY);
