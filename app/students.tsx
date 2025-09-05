@@ -2,7 +2,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { AuthContext } from '../src/context/AuthContext';
-import { router, useIsFocused } from 'expo-router';
+import { router } from 'expo-router';
+import { useIsFocused } from '@react-navigation/native';
 import { Student, getStudents, registerStudent, importStudentsFromCSV, exportStudentsToExcel, resetStudentStatuses } from '../src/utils/storage';
 import * as DocumentPicker from 'expo-document-picker';
 
