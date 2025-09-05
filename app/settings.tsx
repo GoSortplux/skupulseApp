@@ -2,12 +2,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, Switch, Pressable } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
-import { useAuth } from '../src/context/AuthContext';
+import { AuthContext } from '../src/context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function SettingsScreen() {
-  const { isAdmin, logout, updateCredentials } = useAuth();
+  const { isAdmin, logout } = useContext(AuthContext);
   const [newUsername, setNewUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [ttsEnabled, setTtsEnabled] = useState(true);
@@ -37,9 +37,11 @@ export default function SettingsScreen() {
     return null;
   }
 
+  /*
   const handleUpdateCredentials = async () => {
     try {
-      await updateCredentials(newUsername, newPassword);
+      // This feature is temporarily disabled.
+      // await updateCredentials(newUsername, newPassword);
       Alert.alert('Success', 'Admin credentials updated!');
       setNewUsername('');
       setNewPassword('');
@@ -47,6 +49,7 @@ export default function SettingsScreen() {
       Alert.alert('Error', err instanceof Error ? err.message : 'Failed to update credentials');
     }
   };
+  */
 
   const handleLogout = async () => {
     Alert.alert('Confirm Logout', 'Are you sure you want to log out?', [
@@ -84,6 +87,7 @@ export default function SettingsScreen() {
       </Pressable>
       <Text style={styles.title}>Settings</Text>
       <View style={styles.settingsContent}>
+        {/*
         <Text style={styles.subtitle}>Update Admin Credentials</Text>
         <TextInput
           style={styles.input}
@@ -98,7 +102,8 @@ export default function SettingsScreen() {
           onChangeText={setNewPassword}
           secureTextEntry
         />
-        <Button title="Update Credentials" onPress={handleUpdateCredentials} color="#4A90E2" />
+        <Button title="Update Credentials" onPress={() => {}} color="#4A90E2" />
+        */}
         <View style={styles.optionContainer}>
           <Text style={styles.optionText}>Enable TTS</Text>
           <Switch value={ttsEnabled} onValueChange={handleTtsToggle} />
