@@ -5,7 +5,8 @@ import { router, useFocusEffect } from 'expo-router';
 import { getStudents, Student, resetStudentStatuses } from '../src/utils/storage';
 import { AuthContext } from '../src/context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Ionicons } from '@expo/vector-icons'; // Install @expo/vector-icons
+import { Ionicons } from '@expo/vector-icons';
+import { useApi } from '../src/hooks/useApi';
 
 export default function HomeScreen() {
   const [recentStudents, setRecentStudents] = useState<Student[]>([]);
@@ -15,26 +16,36 @@ export default function HomeScreen() {
   const [targetRoute, setTargetRoute] = useState<string | null>(null);
   const [manualClockEnabled, setManualClockEnabled] = useState(true);
   const { isAdmin, login } = useContext(AuthContext);
+  const callApi = useApi();
+
+  const fetchRecentStudents = useCallback(async () => {
+    if (!isAdmin) {
+      setRecentStudents([]);
+      return;
+    }
+    const schoolId = await AsyncStorage.getItem('@skupulseApp:schoolId');
+    if (!schoolId) {
+      return;
+    }
+
+    const studentList = await callApi(() => getStudents(schoolId));
+
+    if (studentList) {
+      const sortedStudents = studentList
+        .filter((student: Student) => student.lastEvent !== null)
+        .sort((a: Student, b: Student) => (b.lastEvent?.timestamp || 0) - (a.lastEvent?.timestamp || 0))
+        .slice(0, 5);
+      setRecentStudents(sortedStudents);
+    }
+  }, [isAdmin, callApi]);
 
   useEffect(() => {
     resetStudentStatuses().catch((error) => console.error('Error resetting student statuses:', error));
     AsyncStorage.getItem('@skupulseApp:manualClockEnabled').then((value) => setManualClockEnabled(value !== 'false'));
-  }, []);
+    fetchRecentStudents();
+  }, [fetchRecentStudents]);
 
-  const fetchRecentStudents = async () => {
-    try {
-      const studentList = await getStudents();
-      const sortedStudents = studentList
-        .filter((student) => student.lastEvent !== null)
-        .sort((a, b) => (b.lastEvent?.timestamp || 0) - (a.lastEvent?.timestamp || 0))
-        .slice(0, 5);
-      setRecentStudents(sortedStudents);
-    } catch (error) {
-      console.error('Error fetching recent students:', error);
-    }
-  };
-
-  useFocusEffect(useCallback(() => { fetchRecentStudents(); }, []));
+  useFocusEffect(fetchRecentStudents);
 
   const handleNavigate = (path: string) => {
     const protectedRoutes = ['/rfid', '/register', '/students', '/attendance', '/settings'];
