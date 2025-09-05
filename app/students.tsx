@@ -1,8 +1,8 @@
 // app/students.tsx
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, FlatList, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { AuthContext } from '../src/context/AuthContext';
-import { router } from 'expo-router';
+import { router, useIsFocused } from 'expo-router';
 import { Student, getStudents, registerStudent, importStudentsFromCSV, exportStudentsToExcel, resetStudentStatuses } from '../src/utils/storage';
 import * as DocumentPicker from 'expo-document-picker';
 
@@ -17,16 +17,22 @@ export default function StudentsScreen() {
   const [parentPhone2, setParentPhone2] = useState('');
   const [rfid, setRfid] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     if (!isAdmin) {
       router.replace('/');
       return;
     }
-    fetchStudents();
-  }, [isAdmin]);
+    if (isFocused) {
+      fetchStudents();
+    }
+  }, [isAdmin, isFocused]);
 
   const fetchStudents = async () => {
+    setIsLoading(true);
+    setError(null);
     try {
       const fetchedStudents = await getStudents();
       setStudents(fetchedStudents);
@@ -34,6 +40,8 @@ export default function StudentsScreen() {
     } catch (err) {
       console.error('Error fetching students:', err);
       setError('Failed to fetch students');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -180,7 +188,9 @@ export default function StudentsScreen() {
         <Button title="Import CSV" onPress={handleImport} color="#34C759" />
         <Button title="Export Excel" onPress={handleExport} color="#5856D6" />
         <Button title="Reset Statuses" onPress={handleResetStatuses} color="#FF9500" />
+        <Button title="Sync Students" onPress={fetchStudents} color="#007AFF" disabled={isLoading} />
       </View>
+      {isLoading && <ActivityIndicator size="large" color="#007AFF" />}
       <FlatList
         data={filteredStudents}
         renderItem={renderStudent}
