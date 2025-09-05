@@ -6,12 +6,13 @@ import { router } from 'expo-router';
 import { useIsFocused } from '@react-navigation/native';
 import { Student, getStudents, registerStudent, importStudentsFromCSV, exportStudentsToExcel, resetStudentStatuses } from '../src/utils/storage';
 import * as DocumentPicker from 'expo-document-picker';
+import { useApi } from '../src/hooks/useApi';
 
 export default function StudentsScreen() {
   const { isAdmin } = useContext(AuthContext);
   const [students, setStudents] = useState<Student[]>([]);
-  const [filteredStudents, setFilteredStudents] = useState<Student[]>([]); // For search results
-  const [searchQuery, setSearchQuery] = useState(''); // Search query state
+  const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const [name, setName] = useState('');
   const [admissionNumber, setAdmissionNumber] = useState('');
   const [parentPhone, setParentPhone] = useState('');
@@ -20,6 +21,7 @@ export default function StudentsScreen() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const isFocused = useIsFocused();
+  const callApi = useApi();
 
   useEffect(() => {
     if (!isAdmin) {
@@ -34,16 +36,12 @@ export default function StudentsScreen() {
   const fetchStudents = async () => {
     setIsLoading(true);
     setError(null);
-    try {
-      const fetchedStudents = await getStudents();
+    const fetchedStudents = await callApi(getStudents);
+    if (fetchedStudents) {
       setStudents(fetchedStudents);
-      setFilteredStudents(fetchedStudents); // Initialize filtered list
-    } catch (err) {
-      console.error('Error fetching students:', err);
-      setError('Failed to fetch students');
-    } finally {
-      setIsLoading(false);
+      setFilteredStudents(fetchedStudents);
     }
+    setIsLoading(false);
   };
 
   const handleSearch = (query: string) => {
@@ -73,9 +71,10 @@ export default function StudentsScreen() {
       return;
     }
 
-    try {
-      const student: Student = { rfid, name, admissionNumber, parentPhone, parentPhone2: parentPhone2 || undefined, lastEvent: null };
-      await registerStudent(student);
+    const student: Student = { rfid, name, admissionNumber, parentPhone, parentPhone2: parentPhone2 || undefined, lastEvent: null };
+    const result = await callApi(() => registerStudent(student));
+
+    if (result !== null) {
       Alert.alert('Success', 'Student registered successfully!');
       setName('');
       setAdmissionNumber('');
@@ -84,8 +83,6 @@ export default function StudentsScreen() {
       setRfid('');
       setError(null);
       fetchStudents();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save student');
     }
   };
 

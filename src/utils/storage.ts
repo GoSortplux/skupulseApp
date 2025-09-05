@@ -43,7 +43,6 @@ export const registerStudent = async (student: Student): Promise<void> => {
     throw new Error('Cannot register student. Not logged in.');
   }
 
-  // First, check for local duplicates to provide immediate feedback
   const students = await getAllStudents();
   if (students.find((s) => s.rfid === student.rfid)) {
     throw new Error('Student with this RFID already exists');
@@ -51,28 +50,20 @@ export const registerStudent = async (student: Student): Promise<void> => {
 
   await apiAddStudent(schoolId, student);
 
-  // After successful API call, update local storage.
   const updatedStudents = [...students, student];
   await AsyncStorage.setItem(STUDENTS_KEY, JSON.stringify(updatedStudents));
 };
 
 export const getAllStudents = async (): Promise<Student[]> => {
-  try {
-    const { schoolId } = await getSession();
-    if (!schoolId) {
-      const jsonValue = await AsyncStorage.getItem(STUDENTS_KEY);
-      return jsonValue ? JSON.parse(jsonValue) : [];
-    }
-    const apiResponse = await apiGetStudents(schoolId);
-    // The API returns an object { total, students }, so we extract the array
-    const studentList = apiResponse.students || [];
-    await AsyncStorage.setItem(STUDENTS_KEY, JSON.stringify(studentList));
-    return studentList;
-  } catch (error) {
-    console.error('Failed to fetch students from API, loading from local storage', error);
+  const { schoolId } = await getSession();
+  if (!schoolId) {
     const jsonValue = await AsyncStorage.getItem(STUDENTS_KEY);
     return jsonValue ? JSON.parse(jsonValue) : [];
   }
+  const apiResponse = await apiGetStudents(schoolId);
+  const studentList = apiResponse.students || [];
+  await AsyncStorage.setItem(STUDENTS_KEY, JSON.stringify(studentList));
+  return studentList;
 };
 
 export const getStudent = async (rfid: string): Promise<Student | null> => {

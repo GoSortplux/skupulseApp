@@ -5,6 +5,7 @@ import * as Clipboard from 'expo-clipboard';
 import { router } from 'expo-router';
 import { startNfc, stopNfc } from '../src/nfc/nfcManager';
 import { registerStudent } from '../src/utils/storage';
+import { useApi } from '../src/hooks/useApi';
 
 export default function RegisterScreen() {
   const [name, setName] = useState('');
@@ -14,6 +15,7 @@ export default function RegisterScreen() {
   const [rfid, setRfid] = useState('');
   const [scanning, setScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const callApi = useApi();
 
   const handleScanRfid = async () => {
     setScanning(true);
@@ -43,15 +45,16 @@ export default function RegisterScreen() {
       return;
     }
 
-    try {
-      await registerStudent({
-        rfid,
-        name,
-        admissionNumber,
-        parentPhone,
-        parentPhone2: parentPhone2 || undefined,
-        lastEvent: null,
-      });
+    const result = await callApi(() => registerStudent({
+      rfid,
+      name,
+      admissionNumber,
+      parentPhone,
+      parentPhone2: parentPhone2 || undefined,
+      lastEvent: null,
+    }));
+
+    if (result !== null) {
       Alert.alert('Success', 'Student registered successfully!', [
         { text: 'OK', onPress: () => router.replace('/students') },
       ]);
@@ -61,8 +64,6 @@ export default function RegisterScreen() {
       setParentPhone2('');
       setRfid('');
       setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to register student');
     }
   };
 
