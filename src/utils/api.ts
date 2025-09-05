@@ -1,8 +1,13 @@
 // src/utils/api.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from './storage';
+import { SessionExpiredError } from './errors';
 
 const handleApiResponse = async (response: Response) => {
+    if (response.status === 401) {
+        throw new SessionExpiredError();
+    }
+
     const responseText = await response.text();
 
     if (!response.ok) {
@@ -11,7 +16,6 @@ const handleApiResponse = async (response: Response) => {
             const errorData = JSON.parse(responseText);
             errorMessage = errorData.message || errorMessage;
         } catch (e) {
-            // Not a JSON response, use the text
             errorMessage = `${errorMessage}. Server response: ${responseText.substring(0, 200)}...`;
         }
         throw new Error(errorMessage);
