@@ -2,12 +2,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert, Switch, Pressable } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
-import { AuthContext } from '../src/context/AuthContext';
+import { useAuth } from '../src/context/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function SettingsScreen() {
-  const { isAdmin, logout, updateCredentials } = useContext(AuthContext);
+  const { isAdmin, logout, updateCredentials } = useAuth();
   const [newUsername, setNewUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [ttsEnabled, setTtsEnabled] = useState(true);
@@ -20,8 +20,20 @@ export default function SettingsScreen() {
     AsyncStorage.getItem('@skupulseApp:manualClockEnabled').then((value) => setManualClockEnabled(value !== 'false'));
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      // Redirect if not an admin. Using useFocusEffect ensures this runs when the screen is focused.
+      // There's a potential race condition on initial load if the auth state isn't ready.
+      // This is an improvement, but a loading state in AuthContext would be the most robust solution.
+      if (isAdmin === false) {
+        router.replace('/');
+      }
+    }, [isAdmin])
+  );
+
+  // Do not render the settings content if the user is not an admin.
+  // This prevents non-admins from seeing the page briefly before redirection.
   if (!isAdmin) {
-    router.replace('/');
     return null;
   }
 
