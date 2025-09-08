@@ -13,6 +13,18 @@ const MAPPING = {
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
+  wifi: 'wifi',
+  'qrcode.viewfinder': 'qr-code-scanner',
+  gear: 'settings',
+  'info.circle': 'info-outline',
+  'arrow.clockwise': 'refresh',
+  'creditcard.fill': 'credit-card',
+  'person.fill': 'person',
+  'number.square.fill': 'format-list-numbered',
+  calendar: 'calendar-today',
+  'phone.fill': 'phone',
+  'message.fill': 'message',
+  'exclamationmark.triangle.fill': 'warning',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],
