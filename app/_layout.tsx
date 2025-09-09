@@ -1,11 +1,19 @@
 // app/_layout.tsx
-import { Stack } from 'expo-router';
+import { Stack, SplashScreen } from 'expo-router';
 import { AuthProvider } from '../src/context/AuthContext';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFonts } from 'expo-font';
+import { MaterialIcons } from '@expo/vector-icons';
+
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [manualClockEnabled, setManualClockEnabled] = useState(true);
+  const [loaded, error] = useFonts({
+    ...MaterialIcons.font,
+  });
 
   useEffect(() => {
     const cleanupOldSettings = async () => {
@@ -22,6 +30,16 @@ export default function RootLayout() {
 
     AsyncStorage.getItem('@skupulseApp:manualClockEnabled').then((value) => setManualClockEnabled(value !== 'false'));
   }, []);
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
 
   return (
     <AuthProvider>
