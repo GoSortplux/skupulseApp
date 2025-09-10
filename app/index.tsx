@@ -28,7 +28,7 @@ export default function HomeScreen() {
       return;
     }
 
-    const studentList = await callApi(() => getStudents(schoolId));
+    const studentList = await callApi(getStudents);
 
     if (studentList) {
       const sortedStudents = studentList
@@ -45,7 +45,11 @@ export default function HomeScreen() {
     fetchRecentStudents();
   }, [fetchRecentStudents]);
 
-  useFocusEffect(fetchRecentStudents);
+  useFocusEffect(
+    useCallback(() => {
+      fetchRecentStudents();
+    }, [fetchRecentStudents])
+  );
 
   const handleNavigate = (path: string) => {
     const protectedRoutes = ['/rfid', '/register', '/students', '/attendance', '/settings'];
