@@ -32,7 +32,6 @@ export default function ManualScreen() {
 
         try {
           await logAttendance(data.rfid, event, true); // Mark as manual
-          await updateStudent(data.rfid, { ...student, lastEvent: { event, timestamp: Date.now() } });
 
           await sendSMS(data.rfid, student.parentPhone, message);
           await logMessage(data.rfid, student.parentPhone, message, 'sent');
@@ -62,7 +61,8 @@ export default function ManualScreen() {
       (err: string) => {
         setError(err);
         setScanning(false);
-      }
+      },
+      true
     );
   };
 
