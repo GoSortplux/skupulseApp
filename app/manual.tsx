@@ -3,6 +3,7 @@ import { View, Text, Button, StyleSheet, Alert } from 'react-native';
 import { startNfc, stopNfc, NfcSuccessData } from '../src/nfc/nfcManager';
 import { getStudent, Student, logAttendance, updateStudent, logMessage } from '../src/utils/storage';
 import { sendSMS } from '../src/utils/sms';
+import { formatStudentName } from '../src/utils/format';
 import Tts from 'react-native-tts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -26,7 +27,8 @@ export default function ManualScreen() {
         }
 
         const now = new Date();
-        const message = `Dear Parent, ${student.name} has ${
+        const formattedName = formatStudentName(student.name);
+        const message = `Dear Parent, ${formattedName} has ${
           event === 'in' ? 'entered' : 'exited'
         } the school on ${now.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })} at ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
 

@@ -1,6 +1,7 @@
 import NfcManager, { NfcEvents } from 'react-native-nfc-manager';
 import { getStudent, updateStudent, logAttendance, Student, logMessage } from '../utils/storage';
 import { sendSMS } from '../utils/sms';
+import { formatStudentName } from '../utils/format';
 import Tts from 'react-native-tts';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -82,7 +83,8 @@ export const startNfc = async (
         return `${hours}:${minutesStr} ${ampm}`;
       };
 
-      const message = `GoSortplux: Dear Parent, ${student.name} has ${
+      const formattedName = formatStudentName(student.name);
+      const message = `GoSortplux: Dear Parent, ${formattedName} has ${
         event === 'in' ? 'entered' : 'exited'
       } the school on ${now.toLocaleDateString('en-US', {
         weekday: 'short',
