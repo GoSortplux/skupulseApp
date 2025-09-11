@@ -95,15 +95,8 @@ export const startNfc = async (
       await updateStudent(rfid, { ...student, lastEvent: { event, timestamp: scanTime } });
 
       const ttsEnabled = (await AsyncStorage.getItem('@skupulseApp:ttsEnabled')) !== 'false';
+      const smsEnabled = (await AsyncStorage.getItem('@skupulseApp:smsEnabled')) !== 'false';
       let smsError: string | undefined;
-      try {
-        await sendSMS(rfid, student.parentPhone, message);
-        if (student.parentPhone2) {
-          await sendSMS(rfid, student.parentPhone2, message);
-        }
-      } catch (err) {
-        smsError = err instanceof Error ? err.message : 'SMS failed';
-      }
 
       if (ttsEnabled) {
         if (event === 'in') Tts.speak(`Hello ${student.name}, welcome to school`);
@@ -112,6 +105,17 @@ export const startNfc = async (
 
       onSuccess({ rfid, student, event, message, smsError }); // Pass smsError to UI
       await stopNfc();
+
+      if (smsEnabled) {
+        try {
+          sendSMS(rfid, student.parentPhone, message);
+          if (student.parentPhone2) {
+            sendSMS(rfid, student.parentPhone2, message);
+          }
+        } catch (err) {
+          console.error('SMS sending failed:', err);
+        }
+      }
     });
 
     await NfcManager.registerTagEvent();
