@@ -7,7 +7,7 @@ export default {
     slug: 'skuPulse',
     version: '1.0.0',
     orientation: 'portrait',
-    icon: './assets/images/favicon.png',
+    icon: './assets/images/adaptive-icon.png',
     scheme: 'myapp',
     userInterfaceStyle: 'automatic',
     newArchEnabled: false,
@@ -38,7 +38,7 @@ export default {
         'READ_EXTERNAL_STORAGE',
       ],
       adaptiveIcon: {
-        foregroundImage: './assets/images/favicon.png',
+        foregroundImage: './assets/images/adaptive-icon.png',
         backgroundColor: '#ffffff',
       },
       package: 'com.anonymous.skupulseApp',
