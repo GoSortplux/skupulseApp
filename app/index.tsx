@@ -103,7 +103,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image source={require('../assets/images/icon.png')} style={styles.logo} />
+        <Image source={require('../assets/images/logo.png')} style={styles.logo} />
         <Pressable onPress={openSettings} style={styles.settingsIcon}>
           <Ionicons name="settings-sharp" size={30} color="#4A90E2" />
         </Pressable>
