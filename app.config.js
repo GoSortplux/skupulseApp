@@ -7,7 +7,7 @@ export default {
     slug: 'skuPulse',
     version: '1.0.0',
     orientation: 'portrait',
-    icon: './assets/images/adaptive-icon.png',
+    icon: './assets/images/icon.png',
     scheme: 'myapp',
     userInterfaceStyle: 'automatic',
     newArchEnabled: false,
