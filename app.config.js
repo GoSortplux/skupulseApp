@@ -38,7 +38,7 @@ export default {
         'READ_EXTERNAL_STORAGE',
       ],
       adaptiveIcon: {
-        foregroundImage: './assets/images/icon.png',
+        foregroundImage: './assets/images/favicon.png',
         backgroundColor: '#ffffff',
       },
       package: 'com.anonymous.skupulseApp',
