@@ -1,6 +1,6 @@
 // app/index.tsx
 import React, { useState, useCallback, useEffect, useContext } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Modal, TextInput, Alert, Pressable, Button } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Modal, TextInput, Alert, Pressable, Button, ActivityIndicator } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { getStudents, Student, resetStudentStatuses } from '../src/utils/storage';
 import { AuthContext } from '../src/context/AuthContext';
@@ -13,6 +13,7 @@ export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [targetRoute, setTargetRoute] = useState<string | null>(null);
   const [manualClockEnabled, setManualClockEnabled] = useState(true);
   const { isAdmin, login } = useContext(AuthContext);
@@ -64,17 +65,24 @@ export default function HomeScreen() {
   };
 
   const handleLogin = async () => {
-    const success = await login(username, password);
-    if (success) {
-      setModalVisible(false);
-      setUsername('');
-      setPassword('');
-      if (targetRoute) {
-        router.push(targetRoute as any);
-        setTargetRoute(null);
+    setIsLoading(true);
+    try {
+      const success = await login(username, password);
+      if (success) {
+        setModalVisible(false);
+        setUsername('');
+        setPassword('');
+        if (targetRoute) {
+          router.push(targetRoute as any);
+          setTargetRoute(null);
+        }
+      } else {
+        Alert.alert('Error', 'Invalid username or password');
       }
-    } else {
-      Alert.alert('Error', 'Invalid username or password');
+    } catch (error) {
+      Alert.alert('Error', 'An unexpected error occurred during login.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -153,22 +161,30 @@ export default function HomeScreen() {
       <Modal visible={modalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Admin Login</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Username"
-              value={username}
-              onChangeText={setUsername}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-            />
-            <Button title="Login" onPress={handleLogin} color="#4A90E2" />
-            <Button title="Cancel" onPress={() => setModalVisible(false)} color="#E74C3C" />
+            {isLoading ? (
+              <ActivityIndicator size="large" color="#4A90E2" />
+            ) : (
+              <>
+                <Text style={styles.modalTitle}>Admin Login</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Username"
+                  value={username}
+                  onChangeText={setUsername}
+                  editable={!isLoading}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  editable={!isLoading}
+                />
+                <Button title="Login" onPress={handleLogin} color="#4A90E2" disabled={isLoading} />
+                <Button title="Cancel" onPress={() => setModalVisible(false)} color="#E74C3C" disabled={isLoading} />
+              </>
+            )}
           </View>
         </View>
       </Modal>
